@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -20,7 +21,11 @@ type Server struct {
 
 // NewServer creates and configures a new tldrfeed server
 func NewServer(config Config) *Server {
-	return newServer(config, mongo.NewRepository(""))
+	r, err := mongo.NewRepository(config.DB)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return newServer(config, r)
 }
 
 func newServer(config Config, repo db.Repository) *Server {

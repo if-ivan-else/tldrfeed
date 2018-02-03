@@ -161,5 +161,7 @@ func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]types
 		}
 	}
 	return nil, db.ErrNotSubscribed
+}
 
+func (r *repository) Close() {
 }

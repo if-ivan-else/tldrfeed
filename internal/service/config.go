@@ -6,4 +6,6 @@ type Config struct {
 	Port int
 	// Should JSON be indented nicely
 	IndentJSON bool
+	// DB specifies DB address to connect to
+	DB string
 }

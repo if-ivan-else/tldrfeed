@@ -31,4 +31,6 @@ type Repository interface {
 	ListUserArticles(userID string) ([]types.Article, error)
 
 	ListUserFeedArticles(userID string, feedID string) ([]types.Article, error)
+
+	Close()
 }

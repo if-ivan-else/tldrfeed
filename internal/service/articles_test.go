@@ -13,8 +13,8 @@ import (
 )
 
 func TestCreateInvalidArticle(t *testing.T) {
-	const textData = `not json`
 	require := require.New(t)
+	const textData = `not json`
 
 	server := testServer()
 	f, _ := server.repo.CreateFeed("Non-stop Tolstoy Fun Channel")
@@ -61,7 +61,7 @@ func TestCreateValidArticle(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 }
 
@@ -113,7 +113,7 @@ tells the story of his younger brother Nikolai Ivanovich.`
 
 	var respJSON []map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Len(respJSON, 1)
 	require.Contains(respJSON[0], "id")
 	require.Equal(title, respJSON[0]["title"])
@@ -162,7 +162,7 @@ lives in a kind of darkening haze.`
 		requireStatus(http.StatusOK, require, rr)
 		var respJSON []map[string]string
 		err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-		require.Nil(err)
+		require.NoError(err)
 		require.Len(respJSON, 1)
 		require.Contains(respJSON[0], "id")
 		require.Equal(title, respJSON[0]["title"])

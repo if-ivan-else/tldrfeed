@@ -57,7 +57,7 @@ func TestCreateValidFeed(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 	require.Equal(name, respJSON["name"])
 }
@@ -77,7 +77,7 @@ func TestListFeeds(t *testing.T) {
 
 	var respJSON []map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Len(respJSON, 1)
 	require.Contains(respJSON[0], "id")
 	require.Equal(name, respJSON[0]["name"])
@@ -111,7 +111,7 @@ func TestGetFeed(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 	require.Equal(name, respJSON["name"])
 }
@@ -145,7 +145,7 @@ func TestGetUserFeedList(t *testing.T) {
 
 	var respJSON []map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Len(respJSON, 1)
 	require.Contains(respJSON[0], "id")
 	require.Equal(f.Name, respJSON[0]["name"])
@@ -181,7 +181,7 @@ func TestGetUserFeed(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 	require.Equal(f.Name, respJSON["name"])
 }

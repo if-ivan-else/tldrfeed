@@ -69,7 +69,7 @@ func TestCreateValidUser(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 	require.Equal("boris", respJSON["name"])
 }
@@ -88,7 +88,7 @@ func TestListUsers(t *testing.T) {
 
 	var respJSON []map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Len(respJSON, 1)
 	require.Contains(respJSON[0], "id")
 	require.Equal("natasha", respJSON[0]["name"])
@@ -121,7 +121,7 @@ func TestGetUser(t *testing.T) {
 
 	var respJSON map[string]string
 	err := json.NewDecoder(rr.Result().Body).Decode(&respJSON)
-	require.Nil(err)
+	require.NoError(err)
 	require.Contains(respJSON, "id")
 	require.Equal("alexey", respJSON["name"])
 }
