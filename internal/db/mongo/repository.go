@@ -97,7 +97,7 @@ func (r *repository) CreateUser(name string) (*types.User, error) {
 		Name: name,
 	}
 
-	// TODO - make User's name uniqe so that we fail here if a user with such name already exists
+	// TODO: make User's name uniqe so that we fail here if a User with such name already exists
 	if err := s.users().Insert(u); err != nil {
 		return nil, err
 	}
@@ -149,7 +149,7 @@ func (r *repository) CreateFeed(name string) (*types.Feed, error) {
 		Users: []string{},
 	}
 
-	// TODO - make Feed's name uniqe so that we fail here if a Feed with such name already exists
+	// TODO: make Feed's name uniqe so that we fail here if a Feed with such name already exists
 	if err := s.feeds().Insert(f); err != nil {
 		return nil, err
 	}
@@ -224,6 +224,10 @@ func (r *repository) AddUserFeed(userID string, feedID string) error {
 	s := r.newSession()
 	defer s.close()
 
+	if _, err := r.getUser(s, userID); err != nil {
+		return err
+	}
+
 	if _, err := r.getFeed(s, feedID); err != nil {
 		return err
 	}
@@ -238,7 +242,7 @@ func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
 	defer s.close()
 
 	feeds := FeedList{}
-	selector := bson.M{"users": []string{userID}}
+	selector := bson.M{"users": bson.M{"$in": []string{userID}}}
 	if err := s.feeds().Find(selector).All(&feeds); err != nil {
 		return nil, err
 	}

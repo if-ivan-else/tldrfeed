@@ -193,7 +193,7 @@ func TestAddUnknownUserFeed(t *testing.T) {
 	f, _ := server.repo.CreateFeed("Chaikovsky Breaking News")
 
 	jsonData := fmt.Sprintf(`{
-    "feedID" : "%s"
+    "feed_id" : "%s"
   }`, f.ID)
 
 	req, _ := http.NewRequest("POST", fmt.Sprintf("/api/v1/users/%s/feeds", uuid.New().String()), strings.NewReader(jsonData))
@@ -212,7 +212,7 @@ func TestAddUserUnknownFeed(t *testing.T) {
 	feedID := uuid.New().String()
 
 	jsonData := fmt.Sprintf(`{
-    "feedID" : "%s"
+    "feed_id" : "%s"
   }`, feedID)
 
 	req, _ := http.NewRequest("POST", fmt.Sprintf("/api/v1/users/%s/feeds", u.ID), strings.NewReader(jsonData))
@@ -263,7 +263,7 @@ func TestAddUserFeed(t *testing.T) {
 	f, _ := server.repo.CreateFeed("Chaikovsky Breaking News")
 
 	jsonData := fmt.Sprintf(`{
-    "feedID" : "%s"
+    "feed_id" : "%s"
   }`, f.ID)
 
 	req, _ := http.NewRequest("POST", fmt.Sprintf("/api/v1/users/%s/feeds", u.ID), strings.NewReader(jsonData))

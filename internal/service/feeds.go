@@ -14,7 +14,7 @@ type createFeedRequest struct {
 
 // addUserFeedRequest represents a request to subscribe a User to an existing Feed
 type addUserFeedRequest struct {
-	FeedID string `json:"feedID" valid:"required~Feed ID cannot be blank"`
+	FeedID string `json:"feed_id" valid:"required~Feed ID cannot be blank"`
 }
 
 // createFeedHandler creates a new Feed

@@ -3,7 +3,6 @@ package service
 import (
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gorilla/mux"
 )
 
@@ -27,7 +26,6 @@ func (s *Server) createFeedArticleHandler() http.HandlerFunc {
 		}
 
 		vars := mux.Vars(req)
-		spew.Dump(vars)
 		articleID, err := s.repo.CreateFeedArticle(vars["feedID"], articleRequest.Title, articleRequest.Body)
 		if err != nil {
 			s.formatter.Text(w, errorToStatus(err), err.Error())
