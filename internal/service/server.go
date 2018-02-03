@@ -7,6 +7,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/if-ivan-else/tldrfeed/internal/db"
+	"github.com/if-ivan-else/tldrfeed/internal/db/mongo"
 	"github.com/unrolled/render"
 )
 
@@ -19,17 +20,19 @@ type Server struct {
 
 // NewServer creates and configures a new tldrfeed server
 func NewServer(config Config) *Server {
-	server := &Server{
+	return newServer(config, mongo.NewRepository(""))
+}
+
+func newServer(config Config, repo db.Repository) *Server {
+	return &Server{
 		formatter: render.New(
 			render.Options{
 				IndentJSON: config.IndentJSON,
 			},
 		),
 		port: config.Port,
-		repo: db.NewRepository(),
+		repo: repo,
 	}
-
-	return server
 }
 
 // Run runs the tldrfeed Server

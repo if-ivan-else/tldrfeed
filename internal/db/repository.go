@@ -32,11 +32,3 @@ type Repository interface {
 
 	ListUserFeedArticles(userID string, feedID string) ([]types.Article, error)
 }
-
-// NewRepository creates a new repository
-func NewRepository() Repository {
-
-	// TODO
-	return nil
-	// return &mock.Repository{}
-}

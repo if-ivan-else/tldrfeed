@@ -8,6 +8,9 @@ import (
 
 func errorToStatus(e error) int {
 	switch e {
+	case db.ErrNotImplemented:
+		return http.StatusNotImplemented
+
 	case db.ErrUserExists:
 		return http.StatusConflict
 
