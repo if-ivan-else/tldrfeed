@@ -72,6 +72,7 @@ func TestUserOperations(t *testing.T) {
 	// Test listing Users
 	listUsers := []types.User{}
 	listUsers, err = r.ListUsers()
+	require.NoError(err)
 	require.Len(listUsers, 1)
 	require.Equal(*u, listUsers[0])
 
@@ -229,7 +230,8 @@ func TestArticleOperations(t *testing.T) {
 		before := timeBefore()
 		// Test creating Articles
 		for _, e := range entries {
-			articleID, err := r.CreateFeedArticle(f.ID, e["title"], e["body"])
+			var articleID string
+			articleID, err = r.CreateFeedArticle(f.ID, e["title"], e["body"])
 			require.NoError(err)
 			require.NotEmpty(articleID)
 		}

@@ -27,6 +27,11 @@ test: testsetup
 
 .PHONY: test
 
+lint:
+	@gometalinter --vendor --exclude ineffassign --exclude errcheck --exclude megacheck ./...
+
+
+
 # Show source statistics.
 cloc:
 	@cloc -exclude-dir=vendor .
@@ -36,3 +41,8 @@ cloc:
 todo:
 	@rg TODO:
 .PHONY: todo
+
+tools:
+	brew install dep
+	@$(GO) get -u gopkg.in/alecthomas/gometalinter.v2
+	@gometalinter --install

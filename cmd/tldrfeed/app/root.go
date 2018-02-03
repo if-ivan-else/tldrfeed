@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -17,6 +18,9 @@ var RootCmd = &cobra.Command{
 
 func rootCmd(cmd *cobra.Command, args []string) {
 	// Do nothing when not given a subcommand
-	cmd.Help()
+	err := cmd.Help()
+	if err != nil {
+		log.Fatal(err)
+	}
 	os.Exit(0)
 }

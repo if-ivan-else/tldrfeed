@@ -2,7 +2,7 @@
 
 TLDR;
 
-tldrfeed is a JSON feed subcription service.
+tldrfeed is a simple JSON feed reader service.
 
 ## Problem
 

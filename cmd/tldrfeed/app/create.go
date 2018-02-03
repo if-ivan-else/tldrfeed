@@ -39,7 +39,7 @@ var createArticleCmd = &cobra.Command{
 }
 
 func runCreate(cmd *cobra.Command, args []string) {
-	cmd.Help()
+	_ = cmd.Help()
 	os.Exit(0)
 }
 
