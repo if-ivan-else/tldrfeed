@@ -10,13 +10,13 @@ type Repository interface {
 
 	ListUsers() ([]types.User, error)
 
-	GetUserByID(userID string) (*types.User, error)
+	GetUser(userID string) (*types.User, error)
 
 	CreateFeed(name string) (*types.Feed, error)
 
 	ListFeeds() ([]types.Feed, error)
 
-	GetFeedByID(feedID string) (*types.Feed, error)
+	GetFeed(feedID string) (*types.Feed, error)
 
 	ListFeedArticles(feedID string) ([]types.Article, error)
 
@@ -25,6 +25,8 @@ type Repository interface {
 	AddUserFeed(userID string, feedID string) error
 
 	ListUserFeeds(userID string) ([]types.Feed, error)
+
+	GetUserFeed(userID string, feedID string) (*types.Feed, error)
 
 	ListUserArticles(userID string) ([]types.Article, error)
 

@@ -10,13 +10,14 @@ import (
 	"github.com/unrolled/render"
 )
 
-// Server captures runtime aspects of the tldrfeed
+// Server captures runtime aspects of the tldrfeed server
 type Server struct {
 	formatter *render.Render
 	repo      db.Repository
 	port      int
 }
 
+// NewServer creates and configures a new tldrfeed server
 func NewServer(config Config) *Server {
 	server := &Server{
 		formatter: render.New(
@@ -31,6 +32,7 @@ func NewServer(config Config) *Server {
 	return server
 }
 
+// Run runs the tldrfeed Server
 func (s *Server) Run() {
 	n := negroni.Classic()
 	// Run the server
@@ -39,7 +41,7 @@ func (s *Server) Run() {
 	n.Run(":" + strconv.Itoa(s.port))
 }
 
-// Run starts and runs tldrfeed service
+// Run configures and runs tldrfeed Service
 func Run(config Config) {
 	NewServer(config).Run()
 }
@@ -66,6 +68,8 @@ func setupRoutes(r *mux.Router, s *Server) {
 	r.HandleFunc("/users/{userID}/feeds", s.getUserFeedListHandler()).Methods("GET")
 	r.HandleFunc("/users/{userID}/feeds", s.addUserFeedHandler()).Methods("POST")
 
+	// Get a Feed a Subscriber is following
+	r.HandleFunc("/users/{userID}/feeds/{feedID}", s.getUserFeedHandler()).Methods("GET")
 	r.HandleFunc("/users/{userID}/feeds/{feedID}/articles", s.getUserFeedArticleListHandler()).Methods("GET")
 	r.HandleFunc("/users/{userID}/articles", s.getUserArticleListHandler()).Methods("GET")
 

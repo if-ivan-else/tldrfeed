@@ -7,6 +7,7 @@ import (
 	valid "github.com/asaskevich/govalidator"
 )
 
+// decodeAndValidae performs JSON decoding from an HTTP request and validates it using govalidator annotations
 func decodeAndValidate(r *http.Request, v interface{}) error {
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
 		return err

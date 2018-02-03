@@ -6,7 +6,7 @@ import (
 	"github.com/if-ivan-else/tldrfeed/internal/types"
 )
 
-// Repository is a mock repository implementation
+// Repository is a mock repository implementation used in tests
 type repository struct {
 	users []types.User
 	feeds []types.Feed
@@ -15,6 +15,7 @@ type repository struct {
 	feedArticles map[string][]types.Article
 }
 
+// NewRepository creates an instance of a mock repository for tests
 func NewRepository() db.Repository {
 	r := &repository{}
 	r.userFeeds = make(map[string][]types.Feed)
@@ -37,7 +38,7 @@ func (r *repository) ListUsers() ([]types.User, error) {
 	return r.users, nil
 }
 
-func (r *repository) GetUserByID(userID string) (*types.User, error) {
+func (r *repository) GetUser(userID string) (*types.User, error) {
 	for _, u := range r.users {
 		if u.ID == userID {
 			return &u, nil
@@ -52,6 +53,7 @@ func (r *repository) CreateFeed(name string) (*types.Feed, error) {
 		Name: name,
 	}
 	r.feeds = append(r.feeds, f)
+	r.feedArticles[f.ID] = []types.Article{}
 	return &f, nil
 }
 
@@ -59,7 +61,7 @@ func (r *repository) ListFeeds() ([]types.Feed, error) {
 	return r.feeds, nil
 }
 
-func (r *repository) GetFeedByID(feedID string) (*types.Feed, error) {
+func (r *repository) GetFeed(feedID string) (*types.Feed, error) {
 	for _, f := range r.feeds {
 		if f.ID == feedID {
 			return &f, nil
@@ -94,7 +96,7 @@ func (r *repository) CreateFeedArticle(feedID string, articleTitle string, artic
 }
 
 func (r *repository) AddUserFeed(userID string, feedID string) error {
-	f, err := r.GetFeedByID(feedID)
+	f, err := r.GetFeed(feedID)
 	if err != nil {
 		return err
 	}
@@ -115,6 +117,19 @@ func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
 		return nil, db.ErrNoSuchUser
 	}
 	return feeds, nil
+}
+
+func (r *repository) GetUserFeed(userID string, feedID string) (*types.Feed, error) {
+	feeds, ok := r.userFeeds[userID]
+	if !ok {
+		return nil, db.ErrNoSuchUser
+	}
+	for _, f := range feeds {
+		if f.ID == feedID {
+			return &f, nil
+		}
+	}
+	return nil, db.ErrNotSubscribed
 }
 
 func (r *repository) ListUserArticles(userID string) ([]types.Article, error) {

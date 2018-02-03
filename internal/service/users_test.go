@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -33,7 +34,7 @@ func TestCreateBlankNameUser(t *testing.T) {
 	router(server).ServeHTTP(rr, req)
 
 	require.Equal(http.StatusBadRequest, rr.Result().StatusCode)
-	t.Logf("Response error returned: %s", rr.Body.String())
+	t.Logf("Error message (expected): %s", rr.Body.String())
 }
 
 func TestCreateNonAlphanumNameUser(t *testing.T) {
@@ -48,7 +49,7 @@ func TestCreateNonAlphanumNameUser(t *testing.T) {
 	router(server).ServeHTTP(rr, req)
 
 	require.Equal(http.StatusBadRequest, rr.Result().StatusCode)
-	t.Logf("Response error returned: %s", rr.Body.String())
+	t.Logf("Error message (expected): %s", rr.Body.String())
 }
 
 func TestCreateValidUser(t *testing.T) {
@@ -91,6 +92,19 @@ func TestListUsers(t *testing.T) {
 	require.Len(respJSON, 1)
 	require.Contains(respJSON[0], "id")
 	require.Equal("natasha", respJSON[0]["name"])
+}
+
+func TestGetUnknownUser(t *testing.T) {
+	require := require.New(t)
+
+	server := testServer()
+
+	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%s", uuid.New().String()), nil)
+	rr := httptest.NewRecorder()
+	router(server).ServeHTTP(rr, req)
+
+	require.Equal(http.StatusNotFound, rr.Result().StatusCode)
+	t.Logf("Error message (expected): %s", rr.Body.String())
 }
 
 func TestGetUser(t *testing.T) {

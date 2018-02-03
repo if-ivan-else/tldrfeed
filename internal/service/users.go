@@ -6,15 +6,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CreateUserRequest represents a request to create a new User
-type CreateUserRequest struct {
+// createUserRequest represents a request to create a new User
+type createUserRequest struct {
 	Name string `json:"name" valid:"required~User name cannot be blank,alphanum~User name should be alphanumeric"`
 }
 
 func (s *Server) createUserHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		userRequest := CreateUserRequest{}
+		userRequest := createUserRequest{}
 		if err := decodeAndValidate(req, &userRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return
@@ -45,7 +45,7 @@ func (s *Server) getUserListHandler() http.HandlerFunc {
 func (s *Server) getUserHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		user, err := s.repo.GetUserByID(vars["userID"])
+		user, err := s.repo.GetUser(vars["userID"])
 		if err != nil {
 			s.formatter.Text(w, errorToStatus(err), err.Error())
 			return

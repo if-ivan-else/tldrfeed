@@ -10,10 +10,14 @@ func errorToStatus(e error) int {
 	switch e {
 	case db.ErrUserExists:
 		return http.StatusConflict
-	case db.ErrNoSuchFeed:
-	case db.ErrNoSuchUser:
-		return http.StatusNotFound
-	}
 
-	return http.StatusInternalServerError
+	case db.ErrNoSuchFeed:
+		fallthrough
+	case db.ErrNoSuchUser:
+		fallthrough
+	case db.ErrNotSubscribed:
+		return http.StatusNotFound
+	default:
+		return http.StatusInternalServerError
+	}
 }

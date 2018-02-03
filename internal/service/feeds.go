@@ -1,20 +1,26 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-// CreateUserRequest represents a request to create a new User
-type CreateFeedRequest struct {
+// createFeedRequest represents a request to create a new User
+type createFeedRequest struct {
 	Name string `json:"name" valid:"required~Feed name cannot be blank"`
+}
+
+// addUserFeedRequest represents a request to subscribe a User to an existing Feed
+type addUserFeedRequest struct {
+	FeedID string `json:"feedID" valid:"required~Feed ID cannot be blank"`
 }
 
 // createFeedHandler creates a new Feed
 func (s *Server) createFeedHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		feedRequest := CreateFeedRequest{}
+		feedRequest := createFeedRequest{}
 		if err := decodeAndValidate(req, &feedRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return
@@ -46,7 +52,8 @@ func (s *Server) getFeedListHandler() http.HandlerFunc {
 func (s *Server) getFeedHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		feed, err := s.repo.GetFeedByID(vars["feedID"])
+
+		feed, err := s.repo.GetFeed(vars["feedID"])
 		if err != nil {
 			s.formatter.Text(w, errorToStatus(err), err.Error())
 			return
@@ -70,16 +77,35 @@ func (s *Server) getUserFeedListHandler() http.HandlerFunc {
 	}
 }
 
-// addUserFeedHandler subscribes a User to a Feed
-func (s *Server) addUserFeedHandler() http.HandlerFunc {
+func (s *Server) getUserFeedHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		err := s.repo.AddUserFeed(vars["userID"], vars["feedID"])
+		feeds, err := s.repo.GetUserFeed(vars["userID"], vars["feedID"])
 		if err != nil {
 			s.formatter.Text(w, errorToStatus(err), err.Error())
 			return
 		}
-		s.formatter.Text(w, http.StatusAccepted, "")
 
+		s.formatter.JSON(w, http.StatusOK, feeds)
+	}
+}
+
+// addUserFeedHandler subscribes a User to a Feed
+func (s *Server) addUserFeedHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		vars := mux.Vars(req)
+		addFeedRequest := addUserFeedRequest{}
+		if err := decodeAndValidate(req, &addFeedRequest); err != nil {
+			s.formatter.Text(w, http.StatusBadRequest, err.Error())
+			return
+		}
+		err := s.repo.AddUserFeed(vars["userID"], addFeedRequest.FeedID)
+		if err != nil {
+			s.formatter.Text(w, errorToStatus(err), err.Error())
+			return
+		}
+		s.formatter.Text(w, http.StatusAccepted,
+			fmt.Sprintf("Successfully subscribed User '%s' to Feed '%s'", vars["userID"], addFeedRequest.FeedID),
+		)
 	}
 }
