@@ -28,7 +28,6 @@ testsetup:
 # Run all tests.
 test: testsetup
 	@$(GO) test ./... && echo "\n==>\033[32m Ok\033[m\n"
-
 .PHONY: test
 
 lint:
