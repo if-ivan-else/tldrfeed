@@ -71,7 +71,7 @@ Key dependencies in the project are:
 There are three key packages at the top of the project:
 
 * cmd - CLI parsing and command implementation (can be used outside of this project)
-* api - externally consumable APIs (REST API Client and related JSON types)
+* api - externally consumable APIs (REST API Client and related JSON api)
 * internal - internal package not meant to be used outside of the project
 
 ## Building and Testing

@@ -1,4 +1,4 @@
-package types
+package api
 
 // Feed defines a Feed in the tldrfeed service
 type Feed struct {

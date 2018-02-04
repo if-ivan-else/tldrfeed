@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/if-ivan-else/tldrfeed/api"
 	"github.com/if-ivan-else/tldrfeed/internal/db"
-	"github.com/if-ivan-else/tldrfeed/internal/types"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
@@ -63,14 +63,14 @@ func TestUserOperations(t *testing.T) {
 	require.NotEmpty(u.Name)
 
 	// Test retrieving User
-	var getUser *types.User
+	var getUser *api.User
 	getUser, err = r.GetUser(u.ID)
 	require.NoError(err)
 	require.Equal(name, getUser.Name)
 	require.Equal(u.ID, getUser.ID)
 
 	// Test listing Users
-	listUsers := []types.User{}
+	listUsers := []api.User{}
 	listUsers, err = r.ListUsers()
 	require.NoError(err)
 	require.Len(listUsers, 1)
@@ -94,14 +94,14 @@ func TestFeedOperations(t *testing.T) {
 	require.NotEmpty(f.Name)
 
 	// Test retrieving the Feed
-	var getFeed *types.Feed
+	var getFeed *api.Feed
 	getFeed, err = r.GetFeed(f.ID)
 	require.NoError(err)
 	require.Equal(name, getFeed.Name)
 	require.Equal(f.ID, getFeed.ID)
 
 	// Test listing Feeds
-	listFeeds := []types.Feed{}
+	listFeeds := []api.Feed{}
 	listFeeds, err = r.ListFeeds()
 	require.Len(listFeeds, 1)
 	require.Equal(*f, listFeeds[0])
@@ -115,7 +115,7 @@ func TestFeedOperations(t *testing.T) {
 	require.Equal(db.ErrNoSuchUser, err)
 
 	// Create Test User
-	var u *types.User
+	var u *api.User
 	u, _ = r.CreateUser("natasha")
 	require.NotNil(u)
 
@@ -196,13 +196,13 @@ her money.`,
 }
 
 // ByNewest is a sorter to validate that articles are returned in proper order
-type ByNewest []types.Article
+type ByNewest []api.Article
 
 func (a ByNewest) Len() int           { return len(a) }
 func (a ByNewest) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByNewest) Less(i, j int) bool { return a[i].PublishedTime.After(a[j].PublishedTime) }
 
-func collectArticles(articles []types.Article) feedArticleData {
+func collectArticles(articles []api.Article) feedArticleData {
 	res := feedArticleData{}
 	for _, a := range articles {
 		res = append(res, articleData{
@@ -236,7 +236,7 @@ func TestArticleOperations(t *testing.T) {
 			require.NotEmpty(articleID)
 		}
 		// Test retrieving Articles
-		var articles []types.Article
+		var articles []api.Article
 		articles, err = r.ListFeedArticles(f.ID)
 		require.NoError(err)
 		require.Len(articles, len(entries))
@@ -250,18 +250,18 @@ func TestArticleOperations(t *testing.T) {
 	_, err := r.ListFeedArticles(uuid.New().String())
 	require.Equal(db.ErrNoSuchFeed, err)
 
-	var u *types.User
+	var u *api.User
 	u, _ = r.CreateUser("alexandra")
 	require.NotNil(u)
 
-	var feeds []types.Feed
+	var feeds []api.Feed
 	feeds, err = r.ListFeeds()
 
 	// Test subscribing User to the Feed
 	err = r.AddUserFeed(u.ID, feeds[0].ID)
 	require.NoError(err)
 
-	var userArticles []types.Article
+	var userArticles []api.Article
 	userArticles, err = r.ListUserArticles(u.ID)
 
 	require.NoError(err)
@@ -269,7 +269,7 @@ func TestArticleOperations(t *testing.T) {
 	require.ElementsMatch(feedData[feeds[0].Name], collected)
 
 	// Make sure sorting order of the elemets is correct
-	sorted := make([]types.Article, len(userArticles))
+	sorted := make([]api.Article, len(userArticles))
 	copy(sorted, userArticles)
 	sort.Sort(ByNewest(userArticles))
 	require.Equal(sorted, userArticles)
@@ -277,11 +277,11 @@ func TestArticleOperations(t *testing.T) {
 	// Subscribe to a different feed - we should see articles from both feeds
 	err = r.AddUserFeed(u.ID, feeds[1].ID)
 	require.NoError(err)
-	var moreArticles []types.Article
+	var moreArticles []api.Article
 	moreArticles, err = r.ListUserArticles(u.ID)
 	require.Len(moreArticles, len(feedData[feeds[0].Name])+len(feedData[feeds[1].Name]))
 
-	var feedArticles []types.Article
+	var feedArticles []api.Article
 	feedArticles, err = r.ListUserFeedArticles(u.ID, feeds[1].ID)
 	collected = collectArticles(feedArticles)
 	require.ElementsMatch(feedData[feeds[1].Name], collected)

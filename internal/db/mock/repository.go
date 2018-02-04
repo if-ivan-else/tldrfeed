@@ -2,43 +2,43 @@ package mock
 
 import (
 	"github.com/google/uuid"
+	"github.com/if-ivan-else/tldrfeed/api"
 	"github.com/if-ivan-else/tldrfeed/internal/db"
-	"github.com/if-ivan-else/tldrfeed/internal/types"
 )
 
 // Repository is a mock repository implementation used in tests
 type repository struct {
-	users []types.User
-	feeds []types.Feed
+	users []api.User
+	feeds []api.Feed
 
-	userFeeds    map[string][]types.Feed
-	feedArticles map[string][]types.Article
+	userFeeds    map[string][]api.Feed
+	feedArticles map[string][]api.Article
 }
 
 // NewRepository creates an instance of a mock repository for tests
 func NewRepository() db.Repository {
 	r := &repository{}
-	r.userFeeds = make(map[string][]types.Feed)
-	r.feedArticles = make(map[string][]types.Article)
+	r.userFeeds = make(map[string][]api.Feed)
+	r.feedArticles = make(map[string][]api.Article)
 	return r
 }
 
-func (r *repository) CreateUser(name string) (*types.User, error) {
-	u := types.User{
+func (r *repository) CreateUser(name string) (*api.User, error) {
+	u := api.User{
 		ID:   uuid.New().String(),
 		Name: name,
 	}
 
 	r.users = append(r.users, u)
-	r.userFeeds[u.ID] = []types.Feed{}
+	r.userFeeds[u.ID] = []api.Feed{}
 	return &u, nil
 }
 
-func (r *repository) ListUsers() ([]types.User, error) {
+func (r *repository) ListUsers() ([]api.User, error) {
 	return r.users, nil
 }
 
-func (r *repository) GetUser(userID string) (*types.User, error) {
+func (r *repository) GetUser(userID string) (*api.User, error) {
 	for _, u := range r.users {
 		if u.ID == userID {
 			return &u, nil
@@ -47,21 +47,21 @@ func (r *repository) GetUser(userID string) (*types.User, error) {
 	return nil, db.ErrNoSuchUser
 }
 
-func (r *repository) CreateFeed(name string) (*types.Feed, error) {
-	f := types.Feed{
+func (r *repository) CreateFeed(name string) (*api.Feed, error) {
+	f := api.Feed{
 		ID:   uuid.New().String(),
 		Name: name,
 	}
 	r.feeds = append(r.feeds, f)
-	r.feedArticles[f.ID] = []types.Article{}
+	r.feedArticles[f.ID] = []api.Article{}
 	return &f, nil
 }
 
-func (r *repository) ListFeeds() ([]types.Feed, error) {
+func (r *repository) ListFeeds() ([]api.Feed, error) {
 	return r.feeds, nil
 }
 
-func (r *repository) GetFeed(feedID string) (*types.Feed, error) {
+func (r *repository) GetFeed(feedID string) (*api.Feed, error) {
 	for _, f := range r.feeds {
 		if f.ID == feedID {
 			return &f, nil
@@ -70,7 +70,7 @@ func (r *repository) GetFeed(feedID string) (*types.Feed, error) {
 	return nil, db.ErrNoSuchFeed
 }
 
-func (r *repository) ListFeedArticles(feedID string) ([]types.Article, error) {
+func (r *repository) ListFeedArticles(feedID string) ([]api.Article, error) {
 	articles, ok := r.feedArticles[feedID]
 	if !ok {
 		return nil, db.ErrNoSuchFeed
@@ -80,7 +80,7 @@ func (r *repository) ListFeedArticles(feedID string) ([]types.Article, error) {
 
 func (r *repository) CreateFeedArticle(feedID string, articleTitle string, articleBody string) (articleID string, e error) {
 
-	a := types.Article{
+	a := api.Article{
 		ID:    uuid.New().String(),
 		Title: articleTitle,
 		Body:  articleBody,
@@ -111,7 +111,7 @@ func (r *repository) AddUserFeed(userID string, feedID string) error {
 	return nil
 }
 
-func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
+func (r *repository) ListUserFeeds(userID string) ([]api.Feed, error) {
 	feeds, ok := r.userFeeds[userID]
 	if !ok {
 		return nil, db.ErrNoSuchUser
@@ -119,7 +119,7 @@ func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
 	return feeds, nil
 }
 
-func (r *repository) GetUserFeed(userID string, feedID string) (*types.Feed, error) {
+func (r *repository) GetUserFeed(userID string, feedID string) (*api.Feed, error) {
 	feeds, ok := r.userFeeds[userID]
 	if !ok {
 		return nil, db.ErrNoSuchUser
@@ -132,13 +132,13 @@ func (r *repository) GetUserFeed(userID string, feedID string) (*types.Feed, err
 	return nil, db.ErrNotSubscribed
 }
 
-func (r *repository) ListUserArticles(userID string) ([]types.Article, error) {
+func (r *repository) ListUserArticles(userID string) ([]api.Article, error) {
 	feeds, err := r.ListUserFeeds(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	userArticles := []types.Article{}
+	userArticles := []api.Article{}
 	for _, f := range feeds {
 		articles, ok := r.feedArticles[f.ID]
 		if ok {
@@ -149,7 +149,7 @@ func (r *repository) ListUserArticles(userID string) ([]types.Article, error) {
 	return userArticles, nil
 }
 
-func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]types.Article, error) {
+func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]api.Article, error) {
 	feeds, err := r.ListUserFeeds(userID)
 	if err != nil {
 		return nil, err

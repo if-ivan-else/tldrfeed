@@ -3,7 +3,7 @@ package mongo
 import (
 	"time"
 
-	"github.com/if-ivan-else/tldrfeed/internal/types"
+	"github.com/if-ivan-else/tldrfeed/api"
 )
 
 // User is a Mongo document to store user records
@@ -12,8 +12,8 @@ type User struct {
 	Name string `bson:"name"`
 }
 
-func (u *User) toAPI() *types.User {
-	return &types.User{
+func (u *User) toAPI() *api.User {
+	return &api.User{
 		ID:   u.ID,
 		Name: u.Name,
 	}
@@ -22,8 +22,8 @@ func (u *User) toAPI() *types.User {
 // UserList is a list of User documents
 type UserList []User
 
-func (l UserList) toAPI() []types.User {
-	res := []types.User{}
+func (l UserList) toAPI() []api.User {
+	res := []api.User{}
 	for _, u := range l {
 		res = append(res, *u.toAPI())
 	}
@@ -37,8 +37,8 @@ type Feed struct {
 	Users []string `bson:"users"`
 }
 
-func (f *Feed) toAPI() *types.Feed {
-	return &types.Feed{
+func (f *Feed) toAPI() *api.Feed {
+	return &api.Feed{
 		ID:   f.ID,
 		Name: f.Name,
 	}
@@ -47,8 +47,8 @@ func (f *Feed) toAPI() *types.Feed {
 // FeedList is a list of Feed documents
 type FeedList []Feed
 
-func (l FeedList) toAPI() []types.Feed {
-	res := []types.Feed{}
+func (l FeedList) toAPI() []api.Feed {
+	res := []api.Feed{}
 	for _, f := range l {
 		res = append(res, *f.toAPI())
 	}
@@ -64,8 +64,8 @@ type Article struct {
 	PublishedTime time.Time `bson:"published_at"`
 }
 
-func (a *Article) toAPI() *types.Article {
-	return &types.Article{
+func (a *Article) toAPI() *api.Article {
+	return &api.Article{
 		ID:            a.ID,
 		Title:         a.Title,
 		Body:          a.Body,
@@ -76,8 +76,8 @@ func (a *Article) toAPI() *types.Article {
 // ArticleList is a list of Article documents
 type ArticleList []Article
 
-func (l ArticleList) toAPI() []types.Article {
-	res := []types.Article{}
+func (l ArticleList) toAPI() []api.Article {
+	res := []api.Article{}
 	for _, a := range l {
 		res = append(res, *a.toAPI())
 	}

@@ -1,36 +1,36 @@
 package db
 
 import (
-	"github.com/if-ivan-else/tldrfeed/internal/types"
+	"github.com/if-ivan-else/tldrfeed/api"
 )
 
 // Repository defines an interface with persistence layer for Users, Feeds, and Articles entities
 type Repository interface {
-	CreateUser(name string) (*types.User, error)
+	CreateUser(name string) (*api.User, error)
 
-	ListUsers() ([]types.User, error)
+	ListUsers() ([]api.User, error)
 
-	GetUser(userID string) (*types.User, error)
+	GetUser(userID string) (*api.User, error)
 
-	CreateFeed(name string) (*types.Feed, error)
+	CreateFeed(name string) (*api.Feed, error)
 
-	ListFeeds() ([]types.Feed, error)
+	ListFeeds() ([]api.Feed, error)
 
-	GetFeed(feedID string) (*types.Feed, error)
+	GetFeed(feedID string) (*api.Feed, error)
 
-	ListFeedArticles(feedID string) ([]types.Article, error)
+	ListFeedArticles(feedID string) ([]api.Article, error)
 
 	CreateFeedArticle(feedID string, articleTitle string, articleBody string) (articleID string, e error)
 
 	AddUserFeed(userID string, feedID string) error
 
-	ListUserFeeds(userID string) ([]types.Feed, error)
+	ListUserFeeds(userID string) ([]api.Feed, error)
 
-	GetUserFeed(userID string, feedID string) (*types.Feed, error)
+	GetUserFeed(userID string, feedID string) (*api.Feed, error)
 
-	ListUserArticles(userID string) ([]types.Article, error)
+	ListUserArticles(userID string) ([]api.Article, error)
 
-	ListUserFeedArticles(userID string, feedID string) ([]types.Article, error)
+	ListUserFeedArticles(userID string, feedID string) ([]api.Article, error)
 
 	Close()
 }

@@ -7,8 +7,8 @@ import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"github.com/google/uuid"
+	"github.com/if-ivan-else/tldrfeed/api"
 	"github.com/if-ivan-else/tldrfeed/internal/db"
-	"github.com/if-ivan-else/tldrfeed/internal/types"
 	"github.com/pkg/errors"
 )
 
@@ -88,7 +88,7 @@ func newRepository(url string, dbName string, drop bool) (db.Repository, error) 
 	}, nil
 }
 
-func (r *repository) CreateUser(name string) (*types.User, error) {
+func (r *repository) CreateUser(name string) (*api.User, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -104,7 +104,7 @@ func (r *repository) CreateUser(name string) (*types.User, error) {
 	return u.toAPI(), nil
 }
 
-func (r *repository) ListUsers() ([]types.User, error) {
+func (r *repository) ListUsers() ([]api.User, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -116,7 +116,7 @@ func (r *repository) ListUsers() ([]types.User, error) {
 	return users.toAPI(), nil
 }
 
-func (r *repository) GetUser(userID string) (*types.User, error) {
+func (r *repository) GetUser(userID string) (*api.User, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -139,7 +139,7 @@ func (r *repository) getUser(s *session, userID string) (*User, error) {
 	return &u, nil
 }
 
-func (r *repository) CreateFeed(name string) (*types.Feed, error) {
+func (r *repository) CreateFeed(name string) (*api.Feed, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -156,7 +156,7 @@ func (r *repository) CreateFeed(name string) (*types.Feed, error) {
 	return f.toAPI(), nil
 }
 
-func (r *repository) ListFeeds() ([]types.Feed, error) {
+func (r *repository) ListFeeds() ([]api.Feed, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -167,7 +167,7 @@ func (r *repository) ListFeeds() ([]types.Feed, error) {
 	return feeds.toAPI(), nil
 }
 
-func (r *repository) GetFeed(feedID string) (*types.Feed, error) {
+func (r *repository) GetFeed(feedID string) (*api.Feed, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -190,7 +190,7 @@ func (r *repository) getFeed(s *session, feedID string) (*Feed, error) {
 	return &f, nil
 }
 
-func (r *repository) ListFeedArticles(feedID string) ([]types.Article, error) {
+func (r *repository) ListFeedArticles(feedID string) ([]api.Article, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -237,7 +237,7 @@ func (r *repository) AddUserFeed(userID string, feedID string) error {
 	return s.feeds().Update(selector, updator)
 }
 
-func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
+func (r *repository) ListUserFeeds(userID string) ([]api.Feed, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -250,7 +250,7 @@ func (r *repository) ListUserFeeds(userID string) ([]types.Feed, error) {
 	return feeds.toAPI(), nil
 }
 
-func (r *repository) GetUserFeed(userID string, feedID string) (*types.Feed, error) {
+func (r *repository) GetUserFeed(userID string, feedID string) (*api.Feed, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -279,7 +279,7 @@ func (r *repository) getUserFeed(s *session, userID string, feedID string) (*Fee
 	return &f, nil
 }
 
-func (r *repository) ListUserArticles(userID string) ([]types.Article, error) {
+func (r *repository) ListUserArticles(userID string) ([]api.Article, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -299,7 +299,7 @@ func (r *repository) ListUserArticles(userID string) ([]types.Article, error) {
 	return r.listArticlesFromFeeds(s, feedIDs)
 }
 
-func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]types.Article, error) {
+func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]api.Article, error) {
 	s := r.newSession()
 	defer s.close()
 
@@ -309,7 +309,7 @@ func (r *repository) ListUserFeedArticles(userID string, feedID string) ([]types
 	return r.listArticlesFromFeeds(s, []string{feedID})
 }
 
-func (r *repository) listArticlesFromFeeds(s *session, feedIDs []string) ([]types.Article, error) {
+func (r *repository) listArticlesFromFeeds(s *session, feedIDs []string) ([]api.Article, error) {
 	articles := ArticleList{}
 	selector := bson.M{"feed_id": bson.M{"$in": feedIDs}}
 	// Gather all the articles in the reverse order by published date
