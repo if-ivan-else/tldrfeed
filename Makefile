@@ -9,8 +9,14 @@ vendor:
 # Build all files.
 build:
 	@echo "==> Building"
-	@$(GO) generate ./...
+	@$(GO) build ./...
 .PHONY: build
+
+# Clean all files.
+clean:
+	@echo "==> Clean"
+	rm ./tldrfeed
+.PHONY: clean
 
 # Install from source.
 install:
