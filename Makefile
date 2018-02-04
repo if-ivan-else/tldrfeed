@@ -15,7 +15,7 @@ build:
 # Clean all files.
 clean:
 	@echo "==> Clean"
-	rm ./tldrfeed
+	@-rm ./tldrfeed
 .PHONY: clean
 
 # Install from source.
