@@ -1,0 +1,13 @@
+version: '2'
+services:
+  mongo:
+    image: mvertes/alpine-mongo
+    ports:
+       - 27017:27017
+
+  tldrfeed:
+    image: tldrfeed
+    ports:
+      - 8080:8080
+    environment:
+      DB_URL: mongo:27017/db

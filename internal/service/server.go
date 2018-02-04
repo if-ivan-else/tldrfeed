@@ -7,6 +7,7 @@ import (
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
+	"github.com/if-ivan-else/tldrfeed/api"
 	"github.com/if-ivan-else/tldrfeed/internal/db"
 	"github.com/if-ivan-else/tldrfeed/internal/db/mongo"
 	"github.com/unrolled/render"
@@ -55,7 +56,7 @@ func Run(config Config) {
 }
 
 func router(s *Server) http.Handler {
-	router := mux.NewRouter().PathPrefix(apiVersion).Subrouter()
+	router := mux.NewRouter().PathPrefix(api.APIVersion).Subrouter()
 	setupRoutes(router, s)
 	return router
 }

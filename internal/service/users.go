@@ -4,17 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/if-ivan-else/tldrfeed/api"
 )
-
-// createUserRequest represents a request to create a new User
-type createUserRequest struct {
-	Name string `json:"name" valid:"required~User name cannot be blank,alphanum~User name should be alphanumeric"`
-}
 
 func (s *Server) createUserHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		userRequest := createUserRequest{}
+		userRequest := api.CreateUserRequest{}
 		if err := decodeAndValidate(req, &userRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return

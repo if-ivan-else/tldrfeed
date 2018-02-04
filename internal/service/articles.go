@@ -4,22 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/if-ivan-else/tldrfeed/api"
 )
-
-// createArticleRequest defines a request to add an Article to a Feed
-type createArticleRequest struct {
-	Title string `json:"title" valid:"required~Article title cannot be blank"`
-	Body  string `json:"body" valid:"required~Article title cannot be blank"`
-}
-
-// createArticleResponse defines a response to send for adding an Article to a Feed
-type createArticleResponse struct {
-	ID string `json:"id"`
-}
 
 func (s *Server) createFeedArticleHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		articleRequest := createArticleRequest{}
+		articleRequest := api.CreateArticleRequest{}
 		if err := decodeAndValidate(req, &articleRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return
@@ -32,7 +22,7 @@ func (s *Server) createFeedArticleHandler() http.HandlerFunc {
 			return
 		}
 
-		response := createArticleResponse{
+		response := api.CreateArticleResponse{
 			ID: articleID,
 		}
 		s.formatter.JSON(w, http.StatusCreated, response)

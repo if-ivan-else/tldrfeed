@@ -1,17 +1,10 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
-RUN apk add --no-cache --update curl \
-  dumb-init \
-  bash \
-  grep \
-  sed \
-  jq \
-  ca-certificates \
-  openssl && \
+RUN apk add --no-cache ca-certificates && \
   rm -rf /var/cache/apk/*
 
 ADD tldrfeed /bin/tldrfeed
 RUN chmod +x /bin/tldrfeed
 EXPOSE 8080
-
-ENTRYPOINT "/bin/tldrfeed"
+ENV DB_URL "mongo:27017/db"
+CMD ["/bin/tldrfeed", "server"]

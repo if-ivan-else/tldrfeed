@@ -5,22 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/if-ivan-else/tldrfeed/api"
 )
-
-// createFeedRequest represents a request to create a new User
-type createFeedRequest struct {
-	Name string `json:"name" valid:"required~Feed name cannot be blank"`
-}
-
-// addUserFeedRequest represents a request to subscribe a User to an existing Feed
-type addUserFeedRequest struct {
-	FeedID string `json:"feed_id" valid:"required~Feed ID cannot be blank"`
-}
 
 // createFeedHandler creates a new Feed
 func (s *Server) createFeedHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		feedRequest := createFeedRequest{}
+		feedRequest := api.CreateFeedRequest{}
 		if err := decodeAndValidate(req, &feedRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return
@@ -94,7 +85,7 @@ func (s *Server) getUserFeedHandler() http.HandlerFunc {
 func (s *Server) addUserFeedHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		addFeedRequest := addUserFeedRequest{}
+		addFeedRequest := api.AddUserFeedRequest{}
 		if err := decodeAndValidate(req, &addFeedRequest); err != nil {
 			s.formatter.Text(w, http.StatusBadRequest, err.Error())
 			return

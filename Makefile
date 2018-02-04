@@ -2,6 +2,10 @@
 
 GO ?= go
 
+vendor:
+	@dep ensure
+.PHONY: vendor
+
 # Build all files.
 build:
 	@echo "==> Building"
@@ -29,8 +33,12 @@ test: testsetup
 
 lint:
 	@gometalinter --vendor --exclude ineffassign --exclude errcheck --exclude megacheck ./...
+.PHONY: lint
 
-
+docker:
+	@env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -installsuffix cgo ./cmd/tldrfeed
+	@docker build -t tldrfeed .
+.PHONY: docker
 
 # Show source statistics.
 cloc:
