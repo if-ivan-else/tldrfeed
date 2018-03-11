@@ -4,7 +4,7 @@ TL;DR;
 
 `tldrfeed` is a simple JSON feed reader service.
 
-tldrfeed was developed as part of programming challenge exercise for Confluent.
+tldrfeed was developed as part of a programming challenge / exercise provided by the Confluent Cloud team.
 
 ## Problem
 
