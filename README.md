@@ -1,25 +1,27 @@
 # TLDRFEED
 
-TLDR;
+TL;DR;
 
 `tldrfeed` is a simple JSON feed reader service.
+
+tldrfeed was developed as part of programming challenge exercise for Confluent.
 
 ## Problem
 
 We want to make a feed reader system. We will have 3 entities in the system: Users, Feeds, Articles. It should
 support the following operations:
 
-1. Subscribe/Unsubscribe a User to a Feed
-2. Add Articles to a Feed
-3. Get all Feeds a Subscriber is following
-4. Get Articles from the set of Feeds a Subscriber is following
+1.  Subscribe/Unsubscribe a User to a Feed
+2.  Add Articles to a Feed
+3.  Get all Feeds a Subscriber is following
+4.  Get Articles from the set of Feeds a Subscriber is following
 
 ## Requirements
 
-1. Write a service with HTTP endpoints that allow items 1-4 from above
-2. It should handle multiple concurrent clients
-3. It should persist data across restarts
-4. Supply a README explaining your choices and how to run/test your service
+1.  Write a service with HTTP endpoints that allow items 1-4 from above
+2.  It should handle multiple concurrent clients
+3.  It should persist data across restarts
+4.  Supply a README explaining your choices and how to run/test your service
 
 ### Clarifications
 
@@ -161,7 +163,7 @@ The above areas apear to be the more complicated so they were tested first.
 
 A couple of examples exercising the `tldrfeed` API using [httpie](https://httpie.org):
 
-1. Creating Users
+1.  Creating Users
 
 ```bash
 http --json POST localhost:8080/api/v1/users name=boris
@@ -176,7 +178,7 @@ Date: Sat, 03 Feb 2018 21:52:07 GMT
 }
 ```
 
-2. Listing Users
+2.  Listing Users
 
 ```bash
 http --json GET localhost:8080/api/v1/users
@@ -193,7 +195,7 @@ Date: Sat, 03 Feb 2018 21:56:54 GMT
 ]
 ```
 
-3. Creating Feeds
+3.  Creating Feeds
 
 ```bash
 http --json POST localhost:8080/api/v1/feeds name="boris' blog"
@@ -208,7 +210,7 @@ Date: Sat, 03 Feb 2018 21:55:30 GMT
 }
 ```
 
-4. Listing Feeds
+4.  Listing Feeds
 
 ```bash
 http --json GET localhost:8080/api/v1/feeds
@@ -225,7 +227,7 @@ Date: Sat, 03 Feb 2018 21:57:32 GMT
 ]
 ```
 
-5. Subscribing a User to a Feed
+5.  Subscribing a User to a Feed
 
 ```bash
 http --json POST localhost:8080/api/v1/users/66a7854c-6657-4b85-9b0e-9b065a1b79d1/feeds feed_id="50b217e2-c5a2-44df-b6f2-c3e624557566"
@@ -237,7 +239,7 @@ Date: Sat, 03 Feb 2018 22:04:34 GMT
 Successfully subscribed User '66a7854c-6657-4b85-9b0e-9b065a1b79d1' to Feed '50b217e2-c5a2-44df-b6f2-c3e624557566'
 ```
 
-6. Listing User's Feeds
+6.  Listing User's Feeds
 
 ```bash
 http --json GET localhost:8080/api/v1/users/66a7854c-6657-4b85-9b0e-9b065a1b79d1/feeds
@@ -254,7 +256,7 @@ Date: Sat, 03 Feb 2018 22:19:43 GMT
 ]
 ```
 
-7. Publishing Articles to a Feed
+7.  Publishing Articles to a Feed
 
 ```bash
 http --json POST localhost:8080/api/v1/feeds/50b217e2-c5a2-44df-b6f2-c3e624557566/articles title="Morning News" body="Eating borsch with sauerkraut"
@@ -277,7 +279,7 @@ Date: Sat, 03 Feb 2018 22:23:15 GMT
 }
 ```
 
-8. Viewing Articles in a Feed
+8.  Viewing Articles in a Feed
 
 ```bash
 http --json GET localhost:8080/api/v1/feeds/50b217e2-c5a2-44df-b6f2-c3e624557566/articles
@@ -302,7 +304,7 @@ Date: Sat, 03 Feb 2018 22:24:08 GMT
 ]
 ```
 
-9. Viewing Articles for a User in a subscribed Feed
+9.  Viewing Articles for a User in a subscribed Feed
 
 ```bash
 http --json GET localhost:8080/api/v1/users/66a7854c-6657-4b85-9b0e-9b065a1b79d1/feeds/50b217e2-c5a2-44df-b6f2-c3e624557566/articles
@@ -327,7 +329,7 @@ Date: Sat, 03 Feb 2018 22:25:00 GMT
 ]
 ```
 
-9. Viewing Articles for a User in all subscribed Feeds
+9.  Viewing Articles for a User in all subscribed Feeds
 
 ```bash
 http --json GET localhost:8080/api/v1/users/66a7854c-6657-4b85-9b0e-9b065a1b79d1/feeds

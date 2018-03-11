@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// RootCmd is the root command that is executed when sonobuoy is run without
+// RootCmd is the root command that is executed when tldrfeed is run without
 // any subcommands.
 var RootCmd = &cobra.Command{
 	Use:   "tldrfeed",
